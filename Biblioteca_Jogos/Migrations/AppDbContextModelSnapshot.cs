@@ -44,7 +44,7 @@ namespace Biblioteca_Jogos.Migrations
 
                     b.HasKey("GeneroId");
 
-                    b.ToTable("Genero");
+                    b.ToTable("Generos");
                 });
 
             modelBuilder.Entity("Biblioteca_Jogos.Models.Jogo", b =>

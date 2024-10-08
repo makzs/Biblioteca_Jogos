@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Biblioteca_Jogos.Models;
 
@@ -19,5 +20,6 @@ public class Jogo
     public DateTime DataCadastrado { get; set; }
 
     public int GeneroId { get; set; }
+    [JsonIgnore]
     public Genero? Genero { get; set; }
 }

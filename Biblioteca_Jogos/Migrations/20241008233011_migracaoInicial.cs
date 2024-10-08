@@ -12,7 +12,7 @@ namespace Biblioteca_Jogos.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Genero",
+                name: "Generos",
                 columns: table => new
                 {
                     GeneroId = table.Column<int>(type: "int", nullable: false)
@@ -23,7 +23,7 @@ namespace Biblioteca_Jogos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genero", x => x.GeneroId);
+                    table.PrimaryKey("PK_Generos", x => x.GeneroId);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,9 +44,9 @@ namespace Biblioteca_Jogos.Migrations
                 {
                     table.PrimaryKey("PK_Jogos", x => x.JogoId);
                     table.ForeignKey(
-                        name: "FK_Jogos_Genero_GeneroId",
+                        name: "FK_Jogos_Generos_GeneroId",
                         column: x => x.GeneroId,
-                        principalTable: "Genero",
+                        principalTable: "Generos",
                         principalColumn: "GeneroId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -64,7 +64,7 @@ namespace Biblioteca_Jogos.Migrations
                 name: "Jogos");
 
             migrationBuilder.DropTable(
-                name: "Genero");
+                name: "Generos");
         }
     }
 }

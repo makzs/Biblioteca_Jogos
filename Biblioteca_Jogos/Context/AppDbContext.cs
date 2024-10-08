@@ -10,7 +10,7 @@ namespace Biblioteca_Jogos.Context
                            
         }
 
-        public DbSet<Genero> Genero { get; set; }
+        public DbSet<Genero> Generos { get; set; }
         public DbSet<Jogo> Jogos { get; set; }
     }
 }

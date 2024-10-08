@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Biblioteca_Jogos.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241008001158_migracaoInicial")]
+    [Migration("20241008233011_migracaoInicial")]
     partial class migracaoInicial
     {
         /// <inheritdoc />
@@ -47,7 +47,7 @@ namespace Biblioteca_Jogos.Migrations
 
                     b.HasKey("GeneroId");
 
-                    b.ToTable("Genero");
+                    b.ToTable("Generos");
                 });
 
             modelBuilder.Entity("Biblioteca_Jogos.Models.Jogo", b =>
