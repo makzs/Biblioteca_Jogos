@@ -1,84 +1,81 @@
 ﻿using Biblioteca_Jogos.Context;
 using Biblioteca_Jogos.Models;
+using Biblioteca_Jogos.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Biblioteca_Jogos.Controllers
+namespace Biblioteca_Jogos.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class GenerosController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GenerosController : ControllerBase
+    // aplicando injeção de dependencia
+    private readonly IRepository<Genero> _repository;
+
+    public GenerosController(IRepository<Genero> repository)
     {
-        // aplicando injeção de dependencia do contexto do banco de dados
-        private readonly AppDbContext _context;
+        _repository = repository;
+    }
 
-        public GenerosController(AppDbContext context)
-        {
-            _context = context;
-        }
+    // Endpoints
 
-        // Endpoints
+    [HttpGet]
+    public ActionResult<IEnumerable<Genero>> Get()
+    {
+        var generos = _repository.GetAll();
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Genero>> Get()
-        {
-            var generos = _context.Generos.AsNoTracking().Take(10).ToList();
+        if (!generos.Any())
+            return NotFound("Não existem Generos Registrados");
 
-            if (!generos.Any())
-                return NotFound("Não existem Generos Registrados");
+        return Ok(generos);
+    }
 
-            return Ok(generos);
-        }
+    [HttpGet("{id:int}", Name ="ObterGenero")]
+    public ActionResult<Genero> Get(int id)
+    {
+        var genero = _repository.Get(g => g.GeneroId == id);
 
-        [HttpGet("{id:int}", Name ="ObterGenero")]
-        public ActionResult<Genero> Get(int id)
-        {
-            var genero = _context.Generos.AsNoTracking().FirstOrDefault(g => g.GeneroId == id);
+        if (genero is null)
+            return NotFound("Genero não encontrado");
 
-            if (genero is null)
-                return NotFound("Genero não encontrado");
+        return Ok(genero);
+    }
 
-            return Ok(genero);
-        }
+    [HttpPost]
+    public ActionResult Post(Genero genero)
+    {
+        if (genero is null)
+            return BadRequest("Genero Invalido");
 
-        [HttpPost]
-        public ActionResult Post(Genero genero)
-        {
-            if (genero is null)
-                return BadRequest("Genero Invalido");
+        _repository.Create(genero);
 
-            _context.Generos.Add(genero);
-            _context.SaveChanges();
+        return new CreatedAtRouteResult("ObterGenero",
+            new { id = genero.GeneroId }, genero);
+    }
 
-            return new CreatedAtRouteResult("ObterGenero",
-                new { id = genero.GeneroId }, genero);
-        }
+    [HttpPut("{id:int}")]
+    public ActionResult Put(int id, Genero genero)
+    {
+        if (id != genero.GeneroId)
+            return BadRequest("Id invalido");
 
-        [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Genero genero)
-        {
-            if (id != genero.GeneroId)
-                return BadRequest("Id invalido");
+        _repository.Update(genero);
 
-            _context.Entry(genero).State = EntityState.Modified;
-            _context.SaveChanges();
+        return Ok(genero);
+    }
 
-            return Ok(genero);
-        }
+    [HttpDelete("{id:int}")]
+    public ActionResult Delete(int id)
+    {
+        var genero = _repository.Get(g => g.GeneroId == id);
 
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
-        {
-            var genero = _context.Generos.FirstOrDefault(g => g.GeneroId==id);
+        if (genero is null)
+            return NotFound("Genero não encontrado");
 
-            if (genero is null)
-                return NotFound("Genero não encontrado");
+        _repository.Delete(genero);
 
-            _context.Generos.Remove(genero);
-            _context.SaveChanges();
-
-            return Ok("Genero removido com sucesso");
-        }
+        return Ok("Genero removido com sucesso");
     }
 }

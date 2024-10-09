@@ -1,84 +1,81 @@
 ﻿using Biblioteca_Jogos.Context;
 using Biblioteca_Jogos.Models;
+using Biblioteca_Jogos.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Biblioteca_Jogos.Controllers
+namespace Biblioteca_Jogos.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class JogosController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class JogosController : ControllerBase
+    // aplicando injeção de dependencia
+    private readonly IRepository<Jogo> _repository;
+
+    public JogosController(IRepository<Jogo> repository)
     {
-        // aplicando injeção de dependencia do contexto do banco de dados
-        private readonly AppDbContext _context;
+        _repository = repository;
+    }
 
-        public JogosController(AppDbContext context)
-        {
-            _context = context;
-        }
+    // Endpoints
 
-        // Endpoints
+    [HttpGet]
+    public ActionResult<IEnumerable<Jogo>> Get()
+    {
+        var jogos = _repository.GetAll();
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Jogo>> Get()
-        {
-            var jogos = _context.Jogos.AsNoTracking().Take(10).ToList();
+        if (!jogos.Any())
+            return NotFound("Não existem jogos Registrados");
 
-            if (!jogos.Any())
-                return NotFound("Não existem jogos Registrados");
+        return Ok(jogos);
+    }
 
-            return Ok(jogos);
-        }
+    [HttpGet("{id:int}", Name = "ObterJogo")]
+    public ActionResult<Jogo> Get(int id)
+    {
+        var jogo = _repository.Get(j => j.JogoId == id);
 
-        [HttpGet("{id:int}", Name = "ObterJogo")]
-        public ActionResult<Jogo> Get(int id)
-        {
-            var jogo = _context.Jogos.AsNoTracking().FirstOrDefault(g => g.JogoId == id);
+        if (jogo is null)
+            return NotFound("Jogo não encontrado");
 
-            if (jogo is null)
-                return NotFound("Jogo não encontrado");
+        return Ok(jogo);
+    }
 
-            return Ok(jogo);
-        }
+    [HttpPost]
+    public ActionResult Post(Jogo jogo)
+    {
+        if (jogo is null)
+            return BadRequest("Jogo Invalido");
 
-        [HttpPost]
-        public ActionResult Post(Jogo jogo)
-        {
-            if (jogo is null)
-                return BadRequest("Jogo Invalido");
+        _repository.Create(jogo);
 
-            _context.Jogos.Add(jogo);
-            _context.SaveChanges();
+        return new CreatedAtRouteResult("ObterJogo",
+            new { id = jogo.JogoId }, jogo);
+    }
 
-            return new CreatedAtRouteResult("ObterJogo",
-                new { id = jogo.JogoId }, jogo);
-        }
+    [HttpPut("{id:int}")]
+    public ActionResult Put(int id, Jogo jogo)
+    {
+        if (id != jogo.JogoId)
+            return BadRequest("Id invalido");
 
-        [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Jogo jogo)
-        {
-            if (id != jogo.JogoId)
-                return BadRequest("Id invalido");
+        _repository.Update(jogo);
 
-            _context.Entry(jogo).State = EntityState.Modified;
-            _context.SaveChanges();
+        return Ok(jogo);
+    }
 
-            return Ok(jogo);
-        }
+    [HttpDelete("{id:int}")]
+    public ActionResult Delete(int id)
+    {
+        var jogo = _repository.Get(j => j.JogoId == id);
 
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
-        {
-            var jogo = _context.Jogos.FirstOrDefault(g => g.JogoId == id);
+        if (jogo is null)
+            return NotFound("Jogo não encontrado");
 
-            if (jogo is null)
-                return NotFound("Jogo não encontrado");
+        _repository.Delete(jogo);
 
-            _context.Jogos.Remove(jogo);
-            _context.SaveChanges();
-
-            return Ok("Jogo removido com sucesso");
-        }
+        return Ok("Jogo removido com sucesso");
     }
 }
