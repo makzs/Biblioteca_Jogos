@@ -22,9 +22,9 @@ public class GenerosController : ControllerBase
     // Endpoints
 
     [HttpGet]
-    public ActionResult<IEnumerable<Genero>> Get()
+    public async Task<ActionResult<IEnumerable<Genero>>> Get()
     {
-        var generos = _uofw.GeneroRepository.GetAll();
+        var generos = await _uofw.GeneroRepository.GetAllAsync();
 
         if (!generos.Any())
             return NotFound("Não existem Generos Registrados");
@@ -33,9 +33,9 @@ public class GenerosController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name ="ObterGenero")]
-    public ActionResult<Genero> Get(int id)
+    public async Task<ActionResult<Genero>> Get(int id)
     {
-        var genero = _uofw.GeneroRepository.Get(g => g.GeneroId == id);
+        var genero = await _uofw.GeneroRepository.GetAsync(g => g.GeneroId == id);
 
         if (genero is null)
             return NotFound("Genero não encontrado");
@@ -44,37 +44,41 @@ public class GenerosController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(Genero genero)
+    public async Task<ActionResult> Post(Genero genero)
     {
         if (genero is null)
             return BadRequest("Genero Invalido");
 
         _uofw.GeneroRepository.Create(genero);
+        await _uofw.commitAsync();
 
         return new CreatedAtRouteResult("ObterGenero",
             new { id = genero.GeneroId }, genero);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Genero genero)
+    public async Task<ActionResult> Put(int id, Genero genero)
     {
         if (id != genero.GeneroId)
             return BadRequest("Id invalido");
 
         _uofw.GeneroRepository.Update(genero);
+        await _uofw.commitAsync();
+
 
         return Ok(genero);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        var genero = _uofw.GeneroRepository.Get(g => g.GeneroId == id);
+        var genero = await _uofw.GeneroRepository.GetAsync(g => g.GeneroId == id);
 
         if (genero is null)
             return NotFound("Genero não encontrado");
 
         _uofw.GeneroRepository.Delete(genero);
+        await _uofw.commitAsync();
 
         return Ok("Genero removido com sucesso");
     }

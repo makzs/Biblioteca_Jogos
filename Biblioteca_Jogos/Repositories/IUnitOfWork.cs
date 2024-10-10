@@ -5,5 +5,5 @@ public interface IUnitOfWork
 
     IGeneroRepository GeneroRepository { get; }
     IJogoRepository JogoRepository { get; }
-    void Commit();
+    Task commitAsync();
 }

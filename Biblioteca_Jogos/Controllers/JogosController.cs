@@ -22,9 +22,9 @@ public class JogosController : ControllerBase
     // Endpoints
 
     [HttpGet]
-    public ActionResult<IEnumerable<Jogo>> Get()
+    public async Task<ActionResult<IEnumerable<Jogo>>> Get()
     {
-        var jogos = _uofw.JogoRepository.GetAll();
+        var jogos = await _uofw.JogoRepository.GetAllAsync();
 
         if (!jogos.Any())
             return NotFound("Não existem jogos Registrados");
@@ -33,9 +33,9 @@ public class JogosController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "ObterJogo")]
-    public ActionResult<Jogo> Get(int id)
+    public async Task<ActionResult<Jogo>> Get(int id)
     {
-        var jogo = _uofw.JogoRepository.Get(j => j.JogoId == id);
+        var jogo = await _uofw.JogoRepository.GetAsync(j => j.JogoId == id);
 
         if (jogo is null)
             return NotFound("Jogo não encontrado");
@@ -44,37 +44,40 @@ public class JogosController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(Jogo jogo)
+    public async Task<ActionResult> Post(Jogo jogo)
     {
         if (jogo is null)
             return BadRequest("Jogo Invalido");
 
         _uofw.JogoRepository.Create(jogo);
+        await _uofw.commitAsync();
 
         return new CreatedAtRouteResult("ObterJogo",
             new { id = jogo.JogoId }, jogo);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Jogo jogo)
+    public async Task<ActionResult> Put(int id, Jogo jogo)
     {
         if (id != jogo.JogoId)
             return BadRequest("Id invalido");
 
         _uofw.JogoRepository.Update(jogo);
+        await _uofw.commitAsync();
 
         return Ok(jogo);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        var jogo = _uofw.JogoRepository.Get(j => j.JogoId == id);
+        var jogo = await _uofw.JogoRepository.GetAsync(j => j.JogoId == id);
 
         if (jogo is null)
             return NotFound("Jogo não encontrado");
 
         _uofw.JogoRepository.Delete(jogo);
+        await _uofw.commitAsync();
 
         return Ok("Jogo removido com sucesso");
     }
