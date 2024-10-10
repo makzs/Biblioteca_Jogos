@@ -12,11 +12,11 @@ namespace Biblioteca_Jogos.Controllers;
 public class JogosController : ControllerBase
 {
     // aplicando injeção de dependencia
-    private readonly IRepository<Jogo> _repository;
+    private readonly IUnitOfWork _uofw;
 
-    public JogosController(IRepository<Jogo> repository)
+    public JogosController(IUnitOfWork uofw)
     {
-        _repository = repository;
+        _uofw = uofw;
     }
 
     // Endpoints
@@ -24,7 +24,7 @@ public class JogosController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<Jogo>> Get()
     {
-        var jogos = _repository.GetAll();
+        var jogos = _uofw.JogoRepository.GetAll();
 
         if (!jogos.Any())
             return NotFound("Não existem jogos Registrados");
@@ -35,7 +35,7 @@ public class JogosController : ControllerBase
     [HttpGet("{id:int}", Name = "ObterJogo")]
     public ActionResult<Jogo> Get(int id)
     {
-        var jogo = _repository.Get(j => j.JogoId == id);
+        var jogo = _uofw.JogoRepository.Get(j => j.JogoId == id);
 
         if (jogo is null)
             return NotFound("Jogo não encontrado");
@@ -49,7 +49,7 @@ public class JogosController : ControllerBase
         if (jogo is null)
             return BadRequest("Jogo Invalido");
 
-        _repository.Create(jogo);
+        _uofw.JogoRepository.Create(jogo);
 
         return new CreatedAtRouteResult("ObterJogo",
             new { id = jogo.JogoId }, jogo);
@@ -61,7 +61,7 @@ public class JogosController : ControllerBase
         if (id != jogo.JogoId)
             return BadRequest("Id invalido");
 
-        _repository.Update(jogo);
+        _uofw.JogoRepository.Update(jogo);
 
         return Ok(jogo);
     }
@@ -69,12 +69,12 @@ public class JogosController : ControllerBase
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var jogo = _repository.Get(j => j.JogoId == id);
+        var jogo = _uofw.JogoRepository.Get(j => j.JogoId == id);
 
         if (jogo is null)
             return NotFound("Jogo não encontrado");
 
-        _repository.Delete(jogo);
+        _uofw.JogoRepository.Delete(jogo);
 
         return Ok("Jogo removido com sucesso");
     }

@@ -12,11 +12,11 @@ namespace Biblioteca_Jogos.Controllers;
 public class GenerosController : ControllerBase
 {
     // aplicando injeção de dependencia
-    private readonly IRepository<Genero> _repository;
+    private readonly IUnitOfWork _uofw;
 
-    public GenerosController(IRepository<Genero> repository)
+    public GenerosController(IUnitOfWork uofw)
     {
-        _repository = repository;
+        _uofw = uofw;
     }
 
     // Endpoints
@@ -24,7 +24,7 @@ public class GenerosController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<Genero>> Get()
     {
-        var generos = _repository.GetAll();
+        var generos = _uofw.GeneroRepository.GetAll();
 
         if (!generos.Any())
             return NotFound("Não existem Generos Registrados");
@@ -35,7 +35,7 @@ public class GenerosController : ControllerBase
     [HttpGet("{id:int}", Name ="ObterGenero")]
     public ActionResult<Genero> Get(int id)
     {
-        var genero = _repository.Get(g => g.GeneroId == id);
+        var genero = _uofw.GeneroRepository.Get(g => g.GeneroId == id);
 
         if (genero is null)
             return NotFound("Genero não encontrado");
@@ -49,7 +49,7 @@ public class GenerosController : ControllerBase
         if (genero is null)
             return BadRequest("Genero Invalido");
 
-        _repository.Create(genero);
+        _uofw.GeneroRepository.Create(genero);
 
         return new CreatedAtRouteResult("ObterGenero",
             new { id = genero.GeneroId }, genero);
@@ -61,7 +61,7 @@ public class GenerosController : ControllerBase
         if (id != genero.GeneroId)
             return BadRequest("Id invalido");
 
-        _repository.Update(genero);
+        _uofw.GeneroRepository.Update(genero);
 
         return Ok(genero);
     }
@@ -69,12 +69,12 @@ public class GenerosController : ControllerBase
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var genero = _repository.Get(g => g.GeneroId == id);
+        var genero = _uofw.GeneroRepository.Get(g => g.GeneroId == id);
 
         if (genero is null)
             return NotFound("Genero não encontrado");
 
-        _repository.Delete(genero);
+        _uofw.GeneroRepository.Delete(genero);
 
         return Ok("Genero removido com sucesso");
     }
