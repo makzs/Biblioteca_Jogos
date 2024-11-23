@@ -2,6 +2,7 @@ using Biblioteca_Jogos.Context;
 using Biblioteca_Jogos.DTOs.Mapping;
 using Biblioteca_Jogos.Models;
 using Biblioteca_Jogos.Repositories;
+using Biblioteca_Jogos.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,8 @@ builder.Services.AddAutoMapper(typeof(GeneroDTOMappingProfile));
 builder.Services.AddAutoMapper(typeof(JogoDTOMappingProfile));
 
 // configurando autenticação
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 var secretKey = builder.Configuration["JWT:SecretKey"] ?? throw new ArgumentException("Invalid secret key!");
 builder.Services.AddAuthentication(options =>
 {
