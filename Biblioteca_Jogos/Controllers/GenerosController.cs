@@ -3,6 +3,7 @@ using Biblioteca_Jogos.Context;
 using Biblioteca_Jogos.DTOs;
 using Biblioteca_Jogos.Models;
 using Biblioteca_Jogos.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ public class GenerosController : ControllerBase
 
     // Endpoints
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GeneroDTO>>> Get()
     {
