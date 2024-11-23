@@ -1,4 +1,6 @@
-﻿using Biblioteca_Jogos.Context;
+﻿using AutoMapper;
+using Biblioteca_Jogos.Context;
+using Biblioteca_Jogos.DTOs;
 using Biblioteca_Jogos.Models;
 using Biblioteca_Jogos.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -13,72 +15,88 @@ public class JogosController : ControllerBase
 {
     // aplicando injeção de dependencia
     private readonly IUnitOfWork _uofw;
+    private readonly IMapper _mapper;
 
-    public JogosController(IUnitOfWork uofw)
+    public JogosController(IUnitOfWork uofw, IMapper mapper)
     {
         _uofw = uofw;
+        _mapper = mapper;
     }
 
     // Endpoints
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Jogo>>> Get()
+    public async Task<ActionResult<IEnumerable<JogoDTO>>> Get()
     {
         var jogos = await _uofw.JogoRepository.GetAllAsync();
 
         if (!jogos.Any())
             return NotFound("Não existem jogos Registrados");
 
-        return Ok(jogos);
+        var jogosDTO = _mapper.Map<IEnumerable<JogoDTO>>(jogos);
+
+        return Ok(jogosDTO);
     }
 
     [HttpGet("{id:int}", Name = "ObterJogo")]
-    public async Task<ActionResult<Jogo>> Get(int id)
+    public async Task<ActionResult<JogoDTO>> Get(int id)
     {
         var jogo = await _uofw.JogoRepository.GetAsync(j => j.JogoId == id);
 
         if (jogo is null)
             return NotFound("Jogo não encontrado");
 
-        return Ok(jogo);
+        var jogoDTO = _mapper.Map<JogoDTO>(jogo);
+
+        return Ok(jogoDTO);
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post(Jogo jogo)
+    public async Task<ActionResult<JogoDTO>> Post(JogoDTO jogoDto)
     {
-        if (jogo is null)
+        if (jogoDto is null)
             return BadRequest("Jogo Invalido");
+
+        var jogo = _mapper.Map<Jogo>(jogoDto);
 
         _uofw.JogoRepository.Create(jogo);
         await _uofw.commitAsync();
 
+        var NovoJogoDto = _mapper.Map<JogoDTO>(jogo);
+
         return new CreatedAtRouteResult("ObterJogo",
-            new { id = jogo.JogoId }, jogo);
+            new { id = NovoJogoDto.JogoId }, NovoJogoDto);
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> Put(int id, Jogo jogo)
+    public async Task<ActionResult<JogoDTO>> Put(int id, JogoDTO jogoDto)
     {
-        if (id != jogo.JogoId)
+        if (id != jogoDto.JogoId)
             return BadRequest("Id invalido");
 
-        _uofw.JogoRepository.Update(jogo);
+        var jogo = _mapper.Map<Jogo>(jogoDto);
+
+        var jogoAtualizado = _uofw.JogoRepository.Update(jogo);
         await _uofw.commitAsync();
 
-        return Ok(jogo);
+        var jogoDtoAtualizado = _mapper.Map<JogoDTO>(jogoAtualizado);
+
+        return Ok(jogoDtoAtualizado);
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult<JogoDTO>> Delete(int id)
     {
         var jogo = await _uofw.JogoRepository.GetAsync(j => j.JogoId == id);
 
         if (jogo is null)
             return NotFound("Jogo não encontrado");
 
-        _uofw.JogoRepository.Delete(jogo);
+        var jogoDeletado = _uofw.JogoRepository.Delete(jogo);
         await _uofw.commitAsync();
 
-        return Ok("Jogo removido com sucesso");
+        var jogoDtoDeletado = _mapper.Map<JogoDTO>(jogoDeletado);
+
+        return Ok(jogoDtoDeletado);
     }
 }

@@ -1,4 +1,5 @@
 using Biblioteca_Jogos.Context;
+using Biblioteca_Jogos.DTOs.Mapping;
 using Biblioteca_Jogos.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,10 @@ builder.Services.AddScoped<IGeneroRepository, GeneroRepository>();
 builder.Services.AddScoped<IJogoRepository, JogoRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// configurando o auto mapper
+builder.Services.AddAutoMapper(typeof(GeneroDTOMappingProfile));
+builder.Services.AddAutoMapper(typeof(JogoDTOMappingProfile));
 
 var app = builder.Build();
 
