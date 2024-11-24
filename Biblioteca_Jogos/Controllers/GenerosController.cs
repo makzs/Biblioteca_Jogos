@@ -26,7 +26,6 @@ public class GenerosController : ControllerBase
 
     // Endpoints
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GeneroDTO>>> Get()
     {
@@ -53,6 +52,7 @@ public class GenerosController : ControllerBase
         return Ok(generoDTO);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<GeneroDTO>> Post(GeneroDTO generoDto)
     {
@@ -70,6 +70,7 @@ public class GenerosController : ControllerBase
             new { id = NovoGeneroDto.GeneroId }, NovoGeneroDto);
     }
 
+    [Authorize]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<GeneroDTO>> Put(int id, GeneroDTO generoDto)
     {
@@ -86,6 +87,7 @@ public class GenerosController : ControllerBase
         return Ok(generoDtoAtualizado);
     }
 
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<GeneroDTO>> Delete(int id)
     {

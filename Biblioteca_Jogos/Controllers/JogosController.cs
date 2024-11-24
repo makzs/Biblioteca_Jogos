@@ -3,6 +3,7 @@ using Biblioteca_Jogos.Context;
 using Biblioteca_Jogos.DTOs;
 using Biblioteca_Jogos.Models;
 using Biblioteca_Jogos.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,7 @@ public class JogosController : ControllerBase
         return Ok(jogoDTO);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<JogoDTO>> Post(JogoDTO jogoDto)
     {
@@ -68,6 +70,7 @@ public class JogosController : ControllerBase
             new { id = NovoJogoDto.JogoId }, NovoJogoDto);
     }
 
+    [Authorize]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<JogoDTO>> Put(int id, JogoDTO jogoDto)
     {
@@ -84,6 +87,7 @@ public class JogosController : ControllerBase
         return Ok(jogoDtoAtualizado);
     }
 
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<JogoDTO>> Delete(int id)
     {
