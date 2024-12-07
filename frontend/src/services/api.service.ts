@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { Genero } from '../model/genero';
 
-const apiUrl = '';
-const apiLoginUrl = '';
+const apiUrl = 'http://localhost:5201/api/generos';
+const apiLoginUrl = 'http://localhost:5201/api/Auth/login';
 var token = '';
 var httpOptions = {headers: new HttpHeaders({"Content-Type": "application/json"})};
 
@@ -17,14 +17,17 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   montaHeaderToken() {
-    token = localStorage.getItem("jwt") || "";
-    console.log('jwt header token ' + token);
-    httpOptions = {headers: new HttpHeaders({"Authorization": "Bearer " + token, "Content-Type": "application/json"})};
+    if (typeof window !== 'undefined' && window.localStorage) {
+      token = localStorage.getItem("jwt") || "";
+      console.log('jwt header token ' + token);
+      httpOptions = {headers: new HttpHeaders({"Authorization": "Bearer " + token, "Content-Type": "application/json"})};
+    }
+    
   }
 
   Login (Usuario: any): Observable<Usuario> {
     return this.http.post<Usuario>(apiLoginUrl, Usuario).pipe(
-      tap((Usuario: Usuario) => console.log(`login com email =${Usuario.email}`)),
+      tap((Usuario: Usuario) => console.log(`login com usuario =${Usuario.UserName}`)),
       catchError(this.handleError<Usuario>('Login'))
     )
   }

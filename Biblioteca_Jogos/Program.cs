@@ -54,6 +54,15 @@ string sqlServerConnection = builder.Configuration.GetConnectionString("DefaultC
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(sqlServerConnection));
 
+// Configurando o Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("EnableCORS", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().Build();
+    });
+});
+
 // injeções de dependencia
 builder.Services.AddScoped<IGeneroRepository, GeneroRepository>();
 builder.Services.AddScoped<IJogoRepository, JogoRepository>();
@@ -98,6 +107,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("EnableCORS");
 
 app.UseAuthorization();
 

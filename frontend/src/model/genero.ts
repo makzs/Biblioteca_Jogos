@@ -1,5 +1,5 @@
 export class Genero {
-    generoId?: string;
+    generoId!: string;
     nome?: string;
     descricao?: string;
     imagemUrl?: string;

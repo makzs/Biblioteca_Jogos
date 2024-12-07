@@ -1,1 +1,29 @@
-<p>genero-detalhe works!</p>
+<div class="example-container mat-elevation-z8">
+    <div class="example-loading-shade"
+         *ngIf="isLoadingResults">
+      <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+    </div>
+    <div class="button-row">
+      <button mat-flat-button color="accent" [routerLink]="['/generos']"><mat-icon>list</mat-icon> Voltar</button>
+    </div>
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title><h2>{{genero.nome}}</h2></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <dl>
+          <dt>Descricao :</dt>
+          <dd>{{genero.descricao}}</dd>
+        </dl>
+        <dl>
+          <dt>Imagem :</dt>
+          <dd>{{genero.imagemUrl}}</dd>
+        </dl>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button color="primary" class="teste" [routerLink]="['/genero-editar', genero.generoId]"><mat-icon>edit</mat-icon> Editar</button>
+        <button mat-flat-button color="warn" (click)="deleteGenero(genero.generoId)"><mat-icon>delete</mat-icon> Excluir</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  

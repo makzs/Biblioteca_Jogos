@@ -1,1 +1,20 @@
-<p>genero-novo works!</p>
+<div>
+    <h3>Adicionar Novo Genero</h3>
+  </div>
+  <form class="example-container" [formGroup]="generoForm" (ngSubmit)="addGenero(generoForm.value)">
+    <mat-form-field>
+      <input matInput name="nome" placeholder="Nome da Genero" formControlName="nome">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <input matInput name="descricao" placeholder="Descricao da Genero" formControlName="descricao">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <textarea  matInput name="imagemUrl" placeholder="Imagem" formControlName="imagemUrl"></textarea>
+    </mat-form-field>
+    <br>
+     <br>
+    <button type="submit" [disabled]="!generoForm.valid" mat-button color="primary" >Adicionar</button>
+  </form>
+  
