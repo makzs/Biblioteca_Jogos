@@ -1,0 +1,28 @@
+<div>
+    <h3>Editar Jogos</h3>
+  </div>
+  <form class="example-container" [formGroup]="jogoForm" (ngSubmit)="updateJogo(jogoForm.value)">
+    <mat-form-field>
+        <input matInput name="titulo" placeholder="Titulo do Jogo" formControlName="titulo">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput name="plataformas" placeholder="plataformas do jogo" formControlName="plataformas">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput name="ano" placeholder="ano de lançamento" formControlName="ano">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput name="preco" placeholder="preço" formControlName="preco">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <textarea  matInput name="imagemUrl" placeholder="Imagem" formControlName="imagemUrl"></textarea>
+      </mat-form-field>
+      <br>
+    <br>
+    <button type="submit" [disabled]="!jogoForm.valid" mat-button color="primary" >Editar</button>
+  </form>
+  

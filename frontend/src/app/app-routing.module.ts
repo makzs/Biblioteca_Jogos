@@ -7,7 +7,10 @@ import { GeneroNovoComponent } from './pages/genero-novo/genero-novo.component';
 import { GeneroEditarComponent } from './pages/genero-editar/genero-editar.component';
 import { LoginComponent } from './pages/login/login.component';
 import { LogoutComponent } from './pages/logout/logout.component';
-import { title } from 'process';
+import { JogosComponent } from './pages/jogos/jogos.component';
+import { JogoDetalheComponent } from './pages/jogo-detalhe/jogo-detalhe.component';
+import { JogoNovoComponent } from './pages/jogo-novo/jogo-novo.component';
+import { JogoEditarComponent } from './pages/jogo-editar/jogo-editar.component';
 
 const routes: Routes = [
   {
@@ -28,7 +31,7 @@ const routes: Routes = [
   {
     path: 'genero-detalhe/:id',
     component: GeneroDetalheComponent,
-    data: {title: 'Detalhe do Genero'}
+    data: {title: 'Detalhes do Genero'}
   },
   {
     path: 'genero-novo',
@@ -39,6 +42,26 @@ const routes: Routes = [
     path: 'genero-editar/:id',
     component: GeneroEditarComponent,
     data: {title: 'Editar Genero'}
+  },
+  {
+    path: 'jogos',
+    component: JogosComponent,
+    data: {title: 'Jogos'}
+  },
+  {
+    path: 'jogo-detalhe/:id',
+    component: JogoDetalheComponent,
+    data: {title: 'Detalhes do Jogo'}
+  },
+  {
+    path: 'jogo-novo',
+    component: JogoNovoComponent,
+    data: {title: 'Adicionar Jogo'}
+  },
+  {
+    path: 'jogo-editar/:id',
+    component: JogoEditarComponent,
+    data: {title: 'Editar Jogo'}
   },
   {
     path: '',

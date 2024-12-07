@@ -23,6 +23,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { JogosComponent } from './pages/jogos/jogos.component';
+import { JogoDetalheComponent } from './pages/jogo-detalhe/jogo-detalhe.component';
+import { JogoNovoComponent } from './pages/jogo-novo/jogo-novo.component';
+import { JogoEditarComponent } from './pages/jogo-editar/jogo-editar.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/
     GeneroNovoComponent,
     GeneroEditarComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    JogosComponent,
+    JogoDetalheComponent,
+    JogoNovoComponent,
+    JogoEditarComponent
   ],
   imports: [
     BrowserModule,
