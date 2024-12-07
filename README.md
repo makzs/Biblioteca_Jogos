@@ -54,3 +54,29 @@ O padrão Unit of Work coordena as transações entre diferentes repositórios, 
 - POST /api/jogos: Adiciona um novo jogo ao sistema (requer autenticação).
 - PUT /api/jogos/{id}: Atualiza as informações de um jogo existente (requer autenticação).
 - DELETE /api/jogos/{id}: Exclui um jogo do sistema (requer autenticação).
+
+## 7. Frontend Angular
+
+Foi desenvolvido um frontend utilizando Angular para consumir a API "Biblioteca de Jogos". A aplicação Angular possui funcionalidades que permitem interagir com as rotas da API para gerenciar gêneros e jogos, incluindo a autenticação JWT.
+
+### Funcionalidades do Frontend:
+- **Autenticação**: A aplicação permite que os usuários façam login e logout através de formulários, utilizando as rotas de autenticação da API.
+- **Gestão de Gêneros e Jogos**: O frontend oferece a capacidade de visualizar, adicionar, editar e excluir gêneros e jogos, consumindo os endpoints CRUD da API.
+- **Armazenamento do Token JWT**: O token JWT obtido no login é armazenado no armazenamento local do navegador (localStorage), sendo enviado em todas as requisições subsequentes para autenticação.
+
+## 8. Componentes
+
+Abaixo estão os componentes principais que fazem parte da minha aplicação:
+
+- **login**: Componente para o login do usuário, onde as credenciais são enviadas para a API e um token JWT é retornado.
+- **logout**: Componente para a desconexão do usuário, invalidando o token JWT.
+- **menu**: Navbar com links para navegar entre as páginas de jogos, gêneros e outras funcionalidades.
+- **jogos**: Componente que lista todos os jogos cadastrados.
+- **jogo-novo**: Componente para cadastrar novos jogos.
+- **jogo-detalhe**: Componente que exibe os detalhes de um jogo específico.
+- **jogo-editar**: Componente para editar as informações de um jogo existente.
+- **generos**: Componente que lista todos os gêneros cadastrados.
+- **genero-novo**: Componente para cadastrar novos gêneros.
+- **genero-detalhe**: Componente que exibe os detalhes de um gênero específico.
+- **genero-editar**: Componente para editar as informações de um gênero existente.
+
