@@ -1,7 +1,7 @@
 import { Usuario } from './../model/usuario';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Genero } from '../model/genero';
 import { Jogo } from '../model/jogo';
 
@@ -58,7 +58,10 @@ export class ApiService {
     this.montaHeaderToken();
     return this.http.post<Genero>(generosUrl, Genero, httpOptions).pipe(
       tap((Genero: Genero) => console.log(`adicionou o Genero com w/ id=${Genero.generoId}`)),
-      catchError(this.handleError<Genero>('addGenero'))
+      catchError(err => {
+        console.error(`Erro ao adicionar Genero: ${err.message}`);
+        return throwError(() => err);
+      })
     );
   }
 
@@ -93,7 +96,10 @@ export class ApiService {
     this.montaHeaderToken();
     return this.http.post<Jogo>(jogosUrl, Jogo, httpOptions).pipe(
       tap((Jogo: Jogo) => console.log(`adicionou o Jogo com w/ id=${Jogo.jogoId}`)),
-      catchError(this.handleError<Jogo>('addJogo'))
+      catchError(err => {
+        console.error(`Erro ao adicionar jogo: ${err.message}`);
+        return throwError(() => err);
+      })
     );
   }
 

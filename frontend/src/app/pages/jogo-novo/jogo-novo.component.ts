@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { FormGroup, Validators, NgForm, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-jogo-novo',
@@ -19,7 +20,7 @@ export class JogoNovoComponent implements OnInit{
   generoId: string = '';
 
   isLoadingResults = false;
-  constructor(private router: Router, private api: ApiService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private api: ApiService, private formBuilder: FormBuilder,  private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.jogoForm = this.formBuilder.group({
@@ -34,13 +35,31 @@ export class JogoNovoComponent implements OnInit{
 
   addJogo(form: NgForm) {
     this.isLoadingResults = true;
-    this.api.addJogo(form)
-      .subscribe(res => {
-          this.isLoadingResults = false;
-          this.router.navigate(['/jogos']);
-        }, (err) => {
-          console.log(err);
-          this.isLoadingResults = false;
+    this.api.addJogo(form).subscribe(
+      res => {
+        this.isLoadingResults = false;
+        this.snackBar.open('Jogo adicionado com sucesso!', 'Fechar', {
+          duration: 3000
         });
+        setTimeout(() => {
+          this.router.navigate(['/jogos']);
+        }, 3000);
+      },
+      err => {
+        this.isLoadingResults = false;
+        console.log(err);
+        if (err.status === 401) {
+          this.snackBar.open('Erro: Usuário não está logado.', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+        } else {
+          this.snackBar.open('Erro ao adicionar o jogo. Tente novamente.', 'Fechar', {
+            duration: 3000
+          });
+        }
+      }
+    );
   }
+  
 }

@@ -27,6 +27,7 @@ import { JogosComponent } from './pages/jogos/jogos.component';
 import { JogoDetalheComponent } from './pages/jogo-detalhe/jogo-detalhe.component';
 import { JogoNovoComponent } from './pages/jogo-novo/jogo-novo.component';
 import { JogoEditarComponent } from './pages/jogo-editar/jogo-editar.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { JogoEditarComponent } from './pages/jogo-editar/jogo-editar.component';
     MatTableModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSnackBarModule
   ],
   providers: [
     provideHttpClient(withFetch()),
